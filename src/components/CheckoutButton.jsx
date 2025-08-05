@@ -1,30 +1,34 @@
-import React from "react";
 
-function CheckoutButton() {
-  const handlePayment = async () => {
+import React, { useState } from 'react';
+import axios from 'axios';
+
+const CheckoutButton = () => {
+  
+  const [paymentUrl, setPaymentUrl] = useState('');
+
+  const handlePayment = async (e) => {
+    e.preventDefault();
     try {
-      const response = await fetch("https://viva-65dt.onrender.com/api/viva/create-order", {
-        method: "POST",
+      const response = await axios.post('http://localhost:5000/api/create-payment', {
+        amount: 50,
+        customerEmail: "Rafi@gmail.com  ",
+        customerName: "Rafi"
       });
-
-      const data = await response.json();
-      if (data.redirectUrl) {
-        window.location.href = data.redirectUrl;
-      } else {
-        alert("Payment creation failed");
-      }
-    } catch (err) {
-      console.error(err);
-      alert("Error occurred");
+      setPaymentUrl(response.data.paymentUrl);
+      window.location.href = response.data.paymentUrl; // Redirect to Smart Checkout
+    } catch (error) {
+      console.error('Payment initiation failed:', error.response?.data || error.message);
+      alert('Failed to initiate payment');
     }
   };
 
   return (
-    <div style={{ padding: 20 }}>
-      <h1>Viva ISV Payment (MERN)</h1>
-      <button onClick={handlePayment}>Pay Now</button>
+    <div>
+      <h2>Initiate Payment</h2>
+    <button onClick={handlePayment}>Payment now</button>
+      {paymentUrl && <p>Redirecting to payment page...</p>}
     </div>
   );
-}
+};
 
 export default CheckoutButton;
