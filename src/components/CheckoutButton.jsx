@@ -1,20 +1,78 @@
-import axios from "axios"
-function App() {
+import React, { useState } from 'react';
 
-  const handlePayment = async () => {
-    const res = await axios.post("https://viva-65dt.onrender.com/api/payment", {
-      amount: 10, // 10 EUR
-      customerEmail: "customerEmail@gmail.com",
-    });
-    window.location.href = res.data.redirectUrl;
-  };
+// import axios from "axios";
 
-  return (
-    <div>
-      <h1>Buy Now</h1>
-      <button onClick={handlePayment} className="border-green-600">Pay with Viva Wallet</button>
+const CheckoutButton = () => {
+const [loading, setLoading] = useState(false);
+
+ const handlePay = async () => {
+    setLoading(true);
+
+    try {
+      const response = await fetch('http://localhost:5000/create-payment-intent', {
+        method: 'POST',
+         headers: {
+          'Content-Type': 'application/json',
+        },
+         body: JSON.stringify({
+          amount: 1000, // amount in cents or minor units
+         customerEmail: 'test@example.com',
+        }),
+       });
+
+      const data = await response.json();
+
+      if (data?.redirectUrl) {
+        // Redirect to Viva Wallet payment page
+        window.location.href = data.redirectUrl;
+      } else {
+        alert('Failed to create payment');
+      }
+    } catch (error) {
+     console.error('Payment Error:', error);
+      alert('Something went wrong');
+  } finally {
+    setLoading(false);
+   }
+ };
+
+ return (
+   <div className="p-6">
+     <h2 className="text-lg font-bold mb-4">Make a Payment</h2>
+     <button
+        onClick={handlePay}
+       disabled={loading}
+       className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 disabled:opacity-50"
+     >
+       {loading ? 'Redirecting...' : 'Pay Now'}
+      </button>
     </div>
   );
-}
+ };
 
-export default App;
+export default CheckoutButton;
+
+// function CheckoutButton() {
+//   const handlePayment = async () => {
+//     try {
+//       const response = await axios.post('https://viva-65dt.onrender.com/create-payment', {
+//         amount: 20.0,
+//         customerEmail: 'customer@example.com',
+//       });
+
+//       const { redirectUrl } = response.data;
+//       window.location.href = redirectUrl;
+//     } catch (err) {
+//       console.error('Payment error:', err);
+//     }
+//   };
+
+//   return (
+//     <div style={{ padding: 40 }}>
+//       <h1>Viva Wallet ISV Smart Checkout</h1>
+//       <button onClick={handlePayment}>Pay £20</button>
+//     </div>
+//   );
+// }
+
+// export default CheckoutButton;
