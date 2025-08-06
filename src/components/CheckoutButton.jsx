@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
 import axios from 'axios';
-// https://viva-65dt.onrender.com
+// https://viva-backend-7bcq.onrender.com
 const CheckoutButton = () => {
   
   const [paymentUrl, setPaymentUrl] = useState('');
