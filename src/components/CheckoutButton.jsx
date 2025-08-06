@@ -9,7 +9,7 @@ const CheckoutButton = () => {
   const handlePayment = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('http://localhost:5000/api/create-payment', {
+      const response = await axios.post('https://viva-65dt.onrender.com/api/create-payment', {
         amount: 50,
         customerEmail: "Rafi@gmail.com  ",
         customerName: "Rafi"
