@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
 import axios from 'axios';
-
+// https://viva-65dt.onrender.com
 const CheckoutButton = () => {
   
   const [paymentUrl, setPaymentUrl] = useState('');
@@ -9,7 +9,7 @@ const CheckoutButton = () => {
   const handlePayment = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('https://viva-65dt.onrender.com/api/create-payment', {
+      const response = await axios.post('http://localhost:5173/api/create-payment', {
         amount: 50,
         customerEmail: "Rafi@gmail.com  ",
         customerName: "Rafi"
